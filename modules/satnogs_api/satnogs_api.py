@@ -27,8 +27,12 @@ class SatnogsApiService:
             BasicDecoder("alsat1n", "UPOC-3374-7750-1640-6748", 41789),
             BasicDecoder("amicalsat", "BHEP-0319-3345-0774-6350", 46287),
             BasicDecoder("armadillo", "RHUX-5355-9162-3098-2723", 44352),
+            # BasicDecoder("ascii85test")
             BasicDecoder("asuphoenix", "BZQX-4787-4409-1766-6854", 45258),
+            # BasicDecoder("ax25frames"),
+            # BasicDecoder("ax25monitor")
             BasicDecoder("azaadisat2", "EKAM-8316-2757-5928-1987", 55563),
+            # BasicDecoder("b85decode"),
             BasicDecoder("bdsat", "PPRG-8689-8762-8343-4648", 52175),
             BasicDecoder("bdsat2", "NJFB-9884-9643-7739-4519", 55098),
             BasicDecoder("beesat", "XFUT-4878-1223-5887-3249", 35933),
