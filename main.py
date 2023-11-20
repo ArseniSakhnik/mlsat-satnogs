@@ -1,7 +1,7 @@
-from fastapi import FastAPI
-import os
+from fastapi import Depends, FastAPI
 from dotenv import load_dotenv
-from modules.mongodb.mongodb import MongodbContext
+from typing import Annotated
+from modules.satnogs_api.satnogs_api import SatnogsApiService
 
 load_dotenv()
 app = FastAPI()
@@ -17,9 +17,5 @@ async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
 
-@app.get("/test")
-async def test():
-    kal = MongodbContext()
-    kal.test()
-    token = os.getenv("SATNOGS_API_TOKEN")
-
+async def initialize_basic_encodes(satnogs_api_service: Annotated[SatnogsApiService, Depends(SatnogsApiService)]):
+    return satnogs_api_service.initialize_basic_decoders()

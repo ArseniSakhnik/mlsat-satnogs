@@ -12,15 +12,3 @@ class MongodbContext:
 
     def get_db(self):
         return self.get_client()[self.mongodb_database]
-
-
-    def test(self):
-        client = pymongo.MongoClient(self.mongodb_connection_string)
-        db = client[self.mongodb_database]
-        collection = db.get_collection("test")
-        document = {
-            "name": "Kal"
-        }
-        collection.insert_one(document)
-
-        i = 0
