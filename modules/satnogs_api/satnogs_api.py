@@ -2,9 +2,11 @@ from typing import Annotated
 from fastapi import Depends
 from modules.mongodb.mongodb import MongodbContext
 from modules.satnogs_api.dtos.basic_decoder import BasicDecoder, NoradInfo
+from satnogsdecoders.decoder import Grbalpha
 import os
 
-satnogs_collection_name = "basic_decoders"
+satnogs_basic_decoders = "basic_decoders"
+satnogs_raw_data = "raw_data"
 
 
 class SatnogsApiService:
@@ -15,10 +17,10 @@ class SatnogsApiService:
     def initialize_basic_decoders(self):
         db = self.mongodb.get_db()
 
-        if satnogs_collection_name not in db.list_collection_names():
-            db.create_collection(satnogs_collection_name)
+        if satnogs_basic_decoders in db.list_collection_names():
+            return
 
-        collection = db.get_collection(satnogs_collection_name)
+        collection = db.get_collection(satnogs_basic_decoders)
 
         basic_decoders: Annotated[BasicDecoder] = [
             BasicDecoder("Grizu263a", "TZQT-5140-2201-6886-0585", 51025),
@@ -67,59 +69,82 @@ class SatnogsApiService:
             BasicDecoder("equisat", "SABJ-3457-7659-3993-3753", 43552),
             # BasicDecoder("eshail2"),
             BasicDecoder("estcube2", "HMYH-8624-2864-5575-0545", 99045),
-            BasicDecoder("foresail1", "CIOM-1903-7117-1067-8603", NoradInfo(99399, 52766)),
+            # BasicDecoder("foresail1", "CIOM-1903-7117-1067-8603", NoradInfo(99399, 52766)),
             # BasicDecoder("fox"),
-            BasicDecoder("gaspacs"),
-            BasicDecoder("geoscanedelveis"),
-            BasicDecoder("grbalpha"),
-            BasicDecoder("greencube"),
-            BasicDecoder("gt1"),
-            BasicDecoder("inspiresat1"),
-            BasicDecoder("irazu"),
-            BasicDecoder("irvine"),
-            BasicDecoder("iss"),
-            BasicDecoder("ksu"),
-            BasicDecoder("ledsat"),
-            BasicDecoder("lightsail2"),
-            BasicDecoder("meznsat"),
-            BasicDecoder("minxss"),
-            BasicDecoder("mirsat1"),
-            BasicDecoder("mitee1"),
-            BasicDecoder("mxl"),
-            BasicDecoder("mysat"),
-            BasicDecoder("netsat"),
-            BasicDecoder("neudose"),
-            BasicDecoder("neutron1"),
-            BasicDecoder("nutsat1"),
-            BasicDecoder("opssat1"),
-            BasicDecoder("oresat0"),
-            BasicDecoder("origamisat1"),
-            BasicDecoder("painani"),
-            BasicDecoder("picsat"),
-            BasicDecoder("planetum1"),
-            BasicDecoder("polyitan"),
-            BasicDecoder("pwsat2"),
-            BasicDecoder("qarman"),
-            BasicDecoder("qbee"),
-            BasicDecoder("qubik"),
-            BasicDecoder("quetzal1"),
-            BasicDecoder("ramsat"),
-            BasicDecoder("rhoksat"),
-            BasicDecoder("roseycubesat1"),
-            BasicDecoder("salsat"),
-            BasicDecoder("sanosat1"),
-            BasicDecoder("selfiesat"),
-            BasicDecoder("sharjahsat1"),
-            BasicDecoder("siriussat"),
-            BasicDecoder("skcube"),
-            BasicDecoder("snet"),
-            BasicDecoder("spoc"),
-            BasicDecoder("strand"),
-            BasicDecoder("stratosattk1"),
-            BasicDecoder("suchai2"),
-            BasicDecoder("targit"),
-            BasicDecoder("us6"),
-            BasicDecoder("uwe4"),
-            BasicDecoder("veronika"),
-            BasicDecoder("vzlusat2"),
+            BasicDecoder("gaspacs", "NYPQ-6177-1118-6247-2663", 51439),
+            BasicDecoder("geoscanedelveis", "QNCD-8954-6090-5430-2718", 53385),
+            BasicDecoder("grbalpha", "HFFD-8697-8440-3101-3937", 47959),
+            BasicDecoder("greencube", "KGEF-8685-2681-9687-2264", 53106),
+            BasicDecoder("gt1", "ABTD-1506-2343-8499-5530", 51510),
+            BasicDecoder("inspiresat1", "KAEG-9794-2542-4829-8548", 51657),
+            BasicDecoder("irazu", "QHGB-5011-7406-7134-6581", 43468),
+            # BasicDecoder("irvine"),
+            # BasicDecoder("iss"),
+            BasicDecoder("ksu", "GJTN-2368-5876-8326-4725", 47954),
+            BasicDecoder("ledsat", "JLZT-0277-4784-7719-1707", 49069),
+            BasicDecoder("lightsail2", "NEYM-8143-9281-1364-3886", 44420),
+            BasicDecoder("meznsat", "HXPT-8292-6749-4283-2496", 46489),
+            BasicDecoder("minxss", "GUIW-3026-5024-1966-8107", 41474),
+            # BasicDecoder("mirsat1"),
+            BasicDecoder("mitee1", "WMCD-5300-1478-1818-8347", 47314),
+            # BasicDecoder("mxl"),
+            # BasicDecoder("mysat"),
+            # TODO добавить другие netsat'ы
+            BasicDecoder("netsat", "OZSW-9908-0796-8166-3293", 46506),
+            # TODO тут я закончил
+            # BasicDecoder("neudose"),
+            # BasicDecoder("neutron1"),
+            # BasicDecoder("nutsat1"),
+            # BasicDecoder("opssat1"),
+            # BasicDecoder("oresat0"),
+            # BasicDecoder("origamisat1"),
+            # BasicDecoder("painani"),
+            # BasicDecoder("picsat"),
+            # BasicDecoder("planetum1"),
+            # BasicDecoder("polyitan"),
+            # BasicDecoder("pwsat2"),
+            # BasicDecoder("qarman"),
+            # BasicDecoder("qbee"),
+            # BasicDecoder("qubik"),
+            # BasicDecoder("quetzal1"),
+            # BasicDecoder("ramsat"),
+            # BasicDecoder("rhoksat"),
+            # BasicDecoder("roseycubesat1"),
+            # BasicDecoder("salsat"),
+            # BasicDecoder("sanosat1"),
+            # BasicDecoder("selfiesat"),
+            # BasicDecoder("sharjahsat1"),
+            # BasicDecoder("siriussat"),
+            # BasicDecoder("skcube"),
+            # BasicDecoder("snet"),
+            # BasicDecoder("spoc"),
+            # BasicDecoder("strand"),
+            # BasicDecoder("stratosattk1"),
+            # BasicDecoder("suchai2"),
+            # BasicDecoder("targit"),
+            # BasicDecoder("us6"),
+            # BasicDecoder("uwe4"),
+            # BasicDecoder("veronika"),
+            # BasicDecoder("vzlusat2"),
         ]
+
+        basic_decoders_dict = list(map(lambda x: x.__dict__, basic_decoders))
+
+        collection.insert_many(basic_decoders_dict)
+
+    def initialize_raw_data(self):
+        db = self.mongodb.get_db()
+
+        if satnogs_raw_data in db.list_collection_names():
+            return
+
+        if satnogs_basic_decoders not in db.list_collection_names():
+            self.initialize_basic_decoders()
+
+        cursor = db.basic_decoders.find({}, {'_id': 0})
+
+        basic_decoders = []
+
+        for document in cursor:
+            basic_decoders.append(document)
+

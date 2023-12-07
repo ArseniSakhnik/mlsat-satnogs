@@ -17,5 +17,11 @@ async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
 
+@app.post("/api/initialize-basic-encoders")
 async def initialize_basic_encodes(satnogs_api_service: Annotated[SatnogsApiService, Depends(SatnogsApiService)]):
     return satnogs_api_service.initialize_basic_decoders()
+
+
+@app.post("/api/initialize-raw-data")
+async def initialize_raw_data(satnogs_api_service: Annotated[SatnogsApiService, Depends(SatnogsApiService)]):
+    return satnogs_api_service.initialize_raw_data()
